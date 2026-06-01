@@ -8,11 +8,12 @@ class CeriumRecoveryUI : public ScreenRecoveryUI {
 public:
     CeriumRecoveryUI();
     
-    void Init() override;
-    void DrawBackground() override;
-    void DrawMenu() override;
+    bool Init(const std::string& locale) override;
 
 protected:
+    void draw_background_locked() override;
+    void draw_foreground_locked() override;
+
     int screen_width;
     int screen_height;
     int block_padding;
