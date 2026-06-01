@@ -1,0 +1,22 @@
+// Copyright (C) 2026 Project Cerium
+
+cc_library_static {
+    name: "librecovery_ui_cerium",
+    recovery_available: true,
+    srcs: [
+        "cerium_ui.cpp",
+    ],
+    include_dirs: [
+        "bootable/recovery",
+        "bootable/recovery/recovery_ui/include",
+        "bootable/recovery/minui/include",
+    ],
+    static_libs: [
+        "libbase",
+        "libminui",
+    ],
+    cflags: [
+        "-Wall",
+        "-Werror",
+    ],
+}
