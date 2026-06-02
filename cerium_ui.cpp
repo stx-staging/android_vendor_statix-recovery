@@ -4,14 +4,14 @@
 #include <string>
 #include <vector>
 
-CeriumRecoveryUI::CeriumRecoveryUI() : 
+CeriumRecoveryUI::CeriumRecoveryUI() :
     screen_width(0), screen_height(0), 
     block_padding(24), block_margin(12),
     char_width(0), char_height(0) {}
 
 bool CeriumRecoveryUI::Init(const std::string& locale) {
     bool result = ScreenRecoveryUI::Init(locale);
-    
+
     screen_width = gr_fb_width();
     screen_height = gr_fb_height();
     
@@ -46,16 +46,20 @@ void CeriumRecoveryUI::DrawCeriumHeader() {
 }
 
 void CeriumRecoveryUI::DrawCeriumMenu() {
-    if (!menu_ || menu_->empty()) return;
+    if (!menu_) return;
+
+    TextMenu* text_menu = static_cast<TextMenu*>(menu_.get());
+
+    if (!text_menu || text_menu->MenuStart() == text_menu->MenuEnd()) return;
 
     int menu_start_y = 200; 
-    size_t current_selection = menu_->selection();
+    size_t current_selection = text_menu->selection();
 
     int block_w = screen_width - (block_margin * 2);
     int block_h = char_height + (block_padding * 2);
 
-    size_t start = menu_->MenuStart();
-    size_t end = menu_->MenuEnd();
+    size_t start = text_menu->MenuStart();
+    size_t end = text_menu->MenuEnd();
 
     for (size_t i = start; i < end; ++i) {
         size_t display_index = i - start;
@@ -65,7 +69,7 @@ void CeriumRecoveryUI::DrawCeriumMenu() {
 
         if (item_bottom > screen_height - 100) break;
 
-        std::string label = menu_->TextItem(i);
+        std::string label = text_menu->TextItem(i);
 
         if (i == current_selection) {
             gr_color(14, 165, 233, 255);
