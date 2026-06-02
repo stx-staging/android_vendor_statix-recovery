@@ -1,3 +1,5 @@
+// Copyright (C) 2026 Project Cerium
+
 #ifndef __CERIUM_RECOVERY_UI_H__
 #define __CERIUM_RECOVERY_UI_H__
 

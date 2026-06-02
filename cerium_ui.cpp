@@ -1,3 +1,5 @@
+// Copyright (C) 2026 Project Cerium
+
 #include "cerium_ui.h"
 #include "minui/minui.h"
 #include <android-base/logging.h>
