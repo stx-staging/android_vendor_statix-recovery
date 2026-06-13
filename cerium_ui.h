@@ -8,6 +8,20 @@
 #include <vector>
 #include <string>
 
+#define CERIUM_COLOR(color) gr_color((color)[2], (color)[1], (color)[0], (color)[3])
+
+struct CeriumTheme {
+    int background[4] = {15, 23, 42, 255};
+    int header_accent[4] = {14, 165, 233, 255};
+    int header_text[4] = {248, 250, 252, 255};
+    
+    int item_active_bg[4] = {14, 165, 233, 255};
+    int item_active_text[4] = {255, 255, 255, 255};
+    
+    int item_inactive_bg[4] = {30, 41, 59, 255};
+    int item_inactive_text[4] = {148, 163, 184, 255};
+};
+
 class CeriumRecoveryUI : public ScreenRecoveryUI {
 public:
     CeriumRecoveryUI();
@@ -24,6 +38,7 @@ protected:
     int block_margin;
     int char_width;
     int char_height;
+    CeriumTheme theme;
 
     void DrawCeriumHeader();
     void DrawCeriumMenu();
@@ -32,10 +47,7 @@ protected:
 class CeriumDevice : public Device {
 public:
     explicit CeriumDevice(ScreenRecoveryUI* ui) : Device(ui) {}
-    
-    // Override the menu list to remove unwanted AOSP items
     const std::vector<std::string>& GetMenuItems() override;
-
 private:
     std::vector<std::string> filtered_menu_;
 };

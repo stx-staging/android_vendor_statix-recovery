@@ -33,14 +33,14 @@ bool CeriumRecoveryUI::Init(const std::string& locale) {
     gr_font_size(gr_sys_font(), &char_width, &char_height);
     
     if (screen_width > 1080) {
-        block_padding = 64;
+        block_padding = 56;
         block_margin = 32;
     }
     return result;
 }
 
 void CeriumRecoveryUI::update_screen_locked() {
-    gr_color(0, 0, 0, 255);
+    CERIUM_COLOR(theme.background);
     gr_clear();
 
     draw_background_locked();
@@ -49,23 +49,18 @@ void CeriumRecoveryUI::update_screen_locked() {
 }
 
 void CeriumRecoveryUI::draw_background_locked() {
-    gr_color(15, 23, 42, 255); 
-    gr_fill(0, 0, screen_width, screen_height);
 }
 
 void CeriumRecoveryUI::DrawCeriumHeader() {
-    int y_cursor = 150; 
+    int y_cursor = screen_height * 0.10; 
 
-    gr_color(0, 0, 0, 255);
-    gr_fill(0, 0, screen_width, y_cursor + char_height + 60);
+    CERIUM_COLOR(theme.header_accent); 
+    gr_fill(block_margin * 2, y_cursor + char_height + 16, screen_width - (block_margin * 2), y_cursor + char_height + 20);
 
-    gr_color(14, 165, 233, 255); 
-    gr_fill(0, y_cursor + char_height + 56, screen_width, y_cursor + char_height + 60);
-
-    gr_color(248, 250, 252, 255); 
+    CERIUM_COLOR(theme.header_text); 
     std::string title = "CERIUM RECOVERY";
     int x_pos = (screen_width - (title.length() * char_width)) / 2;
-    gr_text(gr_sys_font(), x_pos, y_cursor + char_height, title.c_str(), 1);
+    gr_text(gr_sys_font(), x_pos, y_cursor, title.c_str(), 1);
 }
 
 void CeriumRecoveryUI::DrawCeriumMenu() {
@@ -74,49 +69,41 @@ void CeriumRecoveryUI::DrawCeriumMenu() {
     TextMenu* text_menu = static_cast<TextMenu*>(menu_.get());
     if (!text_menu || text_menu->MenuStart() == text_menu->MenuEnd()) return;
 
-    int menu_start_y = 300; 
+    int menu_start_y = screen_height * 0.20; 
     size_t current_selection = text_menu->selection();
 
-    int block_w = screen_width - (block_margin * 2);
-    int block_h = char_height + (block_padding * 2);
+    int card_margin_x = block_margin * 2; 
+    int card_w = screen_width - (card_margin_x * 2);
+    int card_h = char_height + (block_padding * 2);
 
     size_t start = text_menu->MenuStart();
     size_t end = text_menu->MenuEnd();
 
     for (size_t i = start; i < end; ++i) {
         size_t display_index = i - start;
-        
-        int item_top = menu_start_y + (display_index * (block_h + block_margin));
-        int item_bottom = item_top + block_h;
+        int item_top = menu_start_y + (display_index * (card_h + block_margin));
+        int item_bottom = item_top + card_h;
 
-        if (item_bottom > screen_height - 100) break;
+        if (item_bottom > screen_height - (block_margin * 2)) break;
 
         std::string label = text_menu->TextItem(i);
+        int text_y = item_top + (card_h / 2) + (char_height / 2);
 
         if (i == current_selection) {
-            gr_color(14, 165, 233, 255);
-            gr_fill(block_margin, item_top, block_margin + block_w, item_bottom);
+            CERIUM_COLOR(theme.item_active_bg);
+            gr_fill(card_margin_x, item_top, card_margin_x + card_w, item_bottom);
 
-            gr_color(2, 132, 199, 255);
-            gr_fill(block_margin + 6, item_top + 6, block_margin + block_w - 6, item_top + 8);
-            gr_fill(block_margin + 6, item_bottom - 8, block_margin + block_w - 6, item_bottom - 6);
-
-            gr_color(15, 23, 42, 255);
+            CERIUM_COLOR(theme.item_active_text);
+            std::string active_text = "> " + label;
+            gr_text(gr_sys_font(), card_margin_x + block_padding, text_y, active_text.c_str(), 1);
         } else {
-            gr_color(0, 0, 0, 255);
-            gr_fill(block_margin, item_top, block_margin + block_w, item_bottom);
+            CERIUM_COLOR(theme.item_inactive_bg);
+            gr_fill(card_margin_x, item_top, card_margin_x + card_w, item_bottom);
 
-            gr_color(51, 65, 85, 255);
-            gr_fill(block_margin, item_top, block_margin + block_w, item_top + 3);
-            gr_fill(block_margin, item_bottom - 3, block_margin + block_w, item_bottom);
-
-            gr_color(226, 232, 240, 255);
+            CERIUM_COLOR(theme.item_inactive_text);
+            int indent = char_width * 2;
+            gr_text(gr_sys_font(), card_margin_x + block_padding + indent, text_y, label.c_str(), 0);
         }
-
-        int text_x = block_margin + block_padding;
-        int text_y = item_top + (block_h / 2) + (char_height / 2);
-
-        gr_text(gr_sys_font(), text_x, text_y, label.c_str(), (i == current_selection) ? 1 : 0);
     }
 }
 
