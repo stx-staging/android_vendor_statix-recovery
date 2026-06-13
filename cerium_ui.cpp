@@ -10,7 +10,9 @@ const std::vector<std::string>& CeriumDevice::GetMenuItems() {
         for (const auto& item : default_items) {
             if (item.find("graphics test") != std::string::npos ||
                 item.find("locale test") != std::string::npos ||
-                item.find("rescue") != std::string::npos) {
+                item.find("rescue") != std::string::npos ||
+                item.find("Apply update from SD card") != std::string::npos || 
+                item.find("Mount /system") != std::string::npos) { 
                 continue;
             }
             filtered_menu_.push_back(item);
