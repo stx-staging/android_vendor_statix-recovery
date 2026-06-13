@@ -87,7 +87,8 @@ void CeriumRecoveryUI::DrawCeriumMenu() {
         if (item_bottom > screen_height - (block_margin * 2)) break;
 
         std::string label = text_menu->TextItem(i);
-        int text_y = item_top + (card_h / 2) + (char_height / 2);
+
+        int text_y = item_top + ((card_h - char_height) / 2);
 
         if (i == current_selection) {
             CERIUM_COLOR(theme.item_active_bg);
@@ -95,14 +96,21 @@ void CeriumRecoveryUI::DrawCeriumMenu() {
 
             CERIUM_COLOR(theme.item_active_text);
             std::string active_text = "> " + label;
-            gr_text(gr_sys_font(), card_margin_x + block_padding, text_y, active_text.c_str(), 1);
+
+            int text_width = active_text.length() * char_width;
+            int text_x = card_margin_x + ((card_w - text_width) / 2);
+
+            gr_text(gr_sys_font(), text_x, text_y, active_text.c_str(), 1);
         } else {
             CERIUM_COLOR(theme.item_inactive_bg);
             gr_fill(card_margin_x, item_top, card_margin_x + card_w, item_bottom);
 
             CERIUM_COLOR(theme.item_inactive_text);
-            int indent = char_width * 2;
-            gr_text(gr_sys_font(), card_margin_x + block_padding + indent, text_y, label.c_str(), 0);
+
+            int text_width = label.length() * char_width;
+            int text_x = card_margin_x + ((card_w - text_width) / 2);
+
+            gr_text(gr_sys_font(), text_x, text_y, label.c_str(), 0);
         }
     }
 }
