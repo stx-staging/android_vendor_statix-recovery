@@ -48,6 +48,7 @@ class CeriumDevice : public Device {
 public:
     explicit CeriumDevice(ScreenRecoveryUI* ui) : Device(ui) {}
     const std::vector<std::string>& GetMenuItems() override;
+    BuiltinAction InvokeMenuItem(size_t menu_position) override;
 private:
     std::vector<std::string> filtered_menu_;
 };

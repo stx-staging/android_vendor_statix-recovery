@@ -7,7 +7,9 @@
 const std::vector<std::string>& CeriumDevice::GetMenuItems() {
     if (filtered_menu_.empty()) {
         std::vector<std::string> default_items = Device::GetMenuItems();
-        for (const auto& item : default_items) {
+
+        for (size_t i = 0; i < default_items.size(); ++i) {
+            const auto& item = default_items[i];
             if (item.find("graphics test") != std::string::npos ||
                 item.find("locale test") != std::string::npos ||
                 item.find("rescue") != std::string::npos ||
@@ -19,6 +21,27 @@ const std::vector<std::string>& CeriumDevice::GetMenuItems() {
         }
     }
     return filtered_menu_;
+}
+
+Device::BuiltinAction CeriumDevice::InvokeMenuItem(size_t menu_position) {
+    if (menu_position >= filtered_menu_.size()) {
+        return Device::NO_ACTION;
+    }
+
+    std::string item = filtered_menu_[menu_position];
+
+    if (item.find("Reboot system now") != std::string::npos) return Device::REBOOT;
+    if (item.find("Reboot to bootloader") != std::string::npos) return Device::REBOOT_BOOTLOADER;
+    if (item.find("Enter fastboot") != std::string::npos) return Device::ENTER_FASTBOOT;
+    if (item.find("Apply update from ADB") != std::string::npos) return Device::APPLY_ADB_SIDELOAD;
+    if (item.find("Apply update from SD card") != std::string::npos) return Device::APPLY_SDCARD;
+    if (item.find("Wipe data") != std::string::npos) return Device::WIPE_DATA;
+    if (item.find("Wipe cache") != std::string::npos) return Device::WIPE_CACHE;
+    if (item.find("Mount /system") != std::string::npos) return Device::MOUNT_SYSTEM;
+    if (item.find("View recovery logs") != std::string::npos) return Device::VIEW_RECOVERY_LOGS;
+    if (item.find("Power off") != std::string::npos) return Device::SHUTDOWN;
+
+    return Device::NO_ACTION;
 }
 
 CeriumRecoveryUI::CeriumRecoveryUI() : 
