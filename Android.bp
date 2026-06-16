@@ -1,7 +1,7 @@
 // Copyright (C) 2026 Project Cerium
 
 cc_library_static {
-    name: "librecovery_ui_cerium",
+    name: "librecovery_ui_statix",
     recovery_available: true,
     srcs: [
         "cerium_ui.cpp",
